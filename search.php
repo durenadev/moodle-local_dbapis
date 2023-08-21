@@ -70,10 +70,12 @@ if ($data = $searchform->get_data()) {
     // Display the search results.
     foreach ($rs as $record) {
         echo html_writer::start_tag('p', ['class' => '']);
-        echo $OUTPUT->single_button(
-            new moodle_url('/local/dbapis/deletepost.php', ['id' => $record->id, 'returnurl' => $PAGE->url]),
-            get_string('delete')
-        );
+        if (has_capability('local/dbapis:deleteanymessage', $context)) {
+            echo $OUTPUT->single_button(
+                new moodle_url('/local/dbapis/deletepost.php', ['id' => $record->id, 'returnurl' => $PAGE->url]),
+                get_string('delete')
+            );
+        }
         echo $record->id . ', ' . $record->message . ', ' . $record->firstname . ' ' . $record->lastname;
         echo html_writer::end_tag('p');
     }

@@ -32,3 +32,4 @@ $string['searchposts'] = 'Search messages';
 $string['searchterm'] = 'Search term';
 $string['postdeleted'] = 'Message deleted successfully.';
 $string['disclaimer'] = 'This is a sample plugin used for educational purposes only. It is NOT intended for use in production environments.';
+$string['dbapis:deleteanymessage'] = 'Delete any message';
