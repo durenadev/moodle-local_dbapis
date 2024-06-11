@@ -33,11 +33,23 @@ function xmldb_local_dbapis_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager();
+    if ($oldversion < 2023081001) {
+        // Define field id to be added to local_dbapis.
+        $table = new xmldb_table('local_dbapis');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_field('message', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'id');
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'message');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'userid');
+        $table->add_key('dbapis-userid-key', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
 
-    // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
-    //
-    // You will also have to create the db/install.xml file by using the XMLDB Editor.
-    // Documentation for the XMLDB Editor can be found at {@link https://docs.moodle.org/dev/XMLDB_editor}.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Dbapis savepoint reached.
+        upgrade_plugin_savepoint(true, 2023081001, 'local', 'dbapis');
+    }
 
     return true;
 }
