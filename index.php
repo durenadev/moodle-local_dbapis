@@ -38,6 +38,10 @@ if (isguestuser()) {
 }
 
 echo $OUTPUT->header();
+$notice = optional_param('notice', '', PARAM_TEXT);
+if (!empty($notice)) {
+    echo $OUTPUT->notification(get_string($notice, 'local_dbapis'), 'notifysuccess');
+}
 
 echo html_writer::start_tag('div', array('class' => 'p-3 my-3'));
 

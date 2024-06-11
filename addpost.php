@@ -54,19 +54,17 @@ if ($data = $messageform->get_data()) {
     // TODO: Ensure user input is safe to use.
     $message = required_param('message', PARAM_RAW);
 
-    // We are just displaying the form data here.
-    // TODO: Save the data to the database.
-    echo $OUTPUT->header();
+    // Save the data to the database.
+    $record = new stdClass;
+    $record->message = $message;
+    $record->userid = $USER->id;
+    $record->timecreated = time();
+    $DB->insert_record('local_dbapis', $record);
 
-    echo html_writer::start_tag('div', ['class' => 'border p-3 my-3']);
-    echo $message;
-    echo html_writer::end_tag('div');
+    $params = ['notice' => 'postadded'];
+    $redir = new moodle_url('/local/dbapis/',$params);
 
-    echo html_writer::link($PAGE->url, get_string('continue'), ['class' => 'btn btn-link']);
-
-    echo $OUTPUT->footer();
-
-    exit;
+    redirect($redir); // Reload this page to load empty form.
 }
 
 echo $OUTPUT->header();
